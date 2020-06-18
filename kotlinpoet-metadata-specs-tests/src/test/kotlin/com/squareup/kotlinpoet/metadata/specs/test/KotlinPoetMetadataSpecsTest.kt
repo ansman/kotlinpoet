@@ -32,13 +32,14 @@ import com.squareup.kotlinpoet.metadata.specs.TypeNameAliasTag
 import com.squareup.kotlinpoet.metadata.specs.test.MultiClassInspectorTest.ClassInspectorType.ELEMENTS
 import com.squareup.kotlinpoet.metadata.specs.test.MultiClassInspectorTest.ClassInspectorType.REFLECTIVE
 import com.squareup.kotlinpoet.tag
+import org.junit.Ignore
+import org.junit.Test
+import kotlinx.serialization.Serializable
 import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.TYPE
 import kotlin.annotation.AnnotationTarget.TYPE_PARAMETER
 import kotlin.properties.Delegates
 import kotlin.test.fail
-import org.junit.Ignore
-import org.junit.Test
 
 @KotlinPoetMetadataPreview
 @Suppress("unused", "UNUSED_PARAMETER")
@@ -1780,6 +1781,21 @@ class KotlinPoetMetadataSpecsTest : MultiClassInspectorTest() {
     class AssetOut<out B : AssetOut<B>>
     class AssetIn<in C : AssetIn<C>>
   }
+
+  @Test
+  fun kotlinxSerializable() {
+    val typeSpec = GenericSerializableType::class.toTypeSpecWithTestHandler()
+    //language=kotlin
+    assertThat(typeSpec.trimmedToString()).isEqualTo("""
+      data class GenericSerializableType<B>(
+        val value: B
+      )
+      """.trimIndent()
+    )
+  }
+
+  @Serializable
+  data class GenericSerializableType<B>(val value: B)
 
   // Regression test for https://github.com/square/kotlinpoet/issues/821
   @Test

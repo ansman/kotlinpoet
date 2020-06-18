@@ -17,6 +17,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   kotlin("jvm")
+  kotlin("plugin.serialization")
 }
 
 val compileTestKotlin: KotlinCompile by tasks
@@ -27,6 +28,7 @@ compileTestKotlin.kotlinOptions {
 
 dependencies {
   testImplementation(deps.kotlin.stdlib)
+  testImplementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
   testImplementation(project(":kotlinpoet"))
   testImplementation(project(":kotlinpoet-metadata"))
   testImplementation(project(":kotlinpoet-metadata-specs"))
